@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -28,7 +29,7 @@ public class DownloadController {
      * @return 생성된 Excel 파일의 바이트 배열과 적절한 HTTP 헤더, HTTP 상태 코드(200 OK)를 포함하는 ResponseEntity
      */
     @GetMapping("/download")
-    public ResponseEntity<?> downloadProcess(){
+    public ResponseEntity<?> downloadProcess() throws IOException {
 
         // 엑셀 데이터는 byte[]로 받음
         byte[] excelBytes = downloadService.downloadXlsx();

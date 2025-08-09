@@ -1,12 +1,116 @@
 package com.example.apachepoilearning.domain.service;
 
+import com.example.apachepoilearning.entity.User;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class DownloadService {
 
-    public byte[] downloadXlsx(){
-        return null;
+    public byte[] downloadXlsx() throws IOException {
+
+        // 엑셀 Workbook 객체 생성
+        Workbook workbook = new XSSFWorkbook();
+
+        // 시트 추가
+        // ------------------------- Sheet1: 사용자 목록 데이터 -------------------------
+        Sheet sheet1 = workbook.createSheet("User List"); // "User List"라는 이름의 첫 번째 시트 생성
+
+        // 사용자 데이터 생성 (하드코딩 대신 동적 생성 예시)
+        List<User> users = new ArrayList<>();
+        users.add(new User(1L, "김철수", "kim@example.com", 25));
+        users.add(new User(2L, "이영희", "lee@example.com", 30));
+        users.add(new User(3L, "박민준", "park@example.com", 28));
+        users.add(new User(4L, "최수정", "choi@example.com", 32));
+
+        // Sheet1 헤더 로우 생성
+        Row headerRow1 = sheet1.createRow(0);
+        String[] headers1 = {"ID", "이름", "이메일", "나이"};
+        for (int i = 0; i < headers1.length; i++) {
+            headerRow1.createCell(i).setCellValue(headers1[i]);
+        }
+
+        // Sheet1 데이터 로우 생성
+        int rowNum1 = 1;
+        for (User user : users) {
+            Row row = sheet1.createRow(rowNum1++);
+            row.createCell(0).setCellValue(user.getId());
+            row.createCell(1).setCellValue(user.getName());
+            row.createCell(2).setCellValue(user.getEmail());
+            row.createCell(3).setCellValue(user.getAge());
+        }
+
+        // ------------------------- Sheet2: 통계 요약 데이터 -------------------------
+        Sheet sheet2 = workbook.createSheet("Statistics Summary"); // "Statistics Summary"라는 이름의 두 번째 시트 생성
+
+        // 통계 데이터 생성 (예시)
+        Map<String, Integer> stats = new LinkedHashMap<>(); // 순서 유지를 위해 LinkedHashMap 사용
+        stats.put("Category A", 150);
+        stats.put("Category B", 230);
+        stats.put("Category C", 90);
+        stats.put("Category D", 400);
+
+        // Sheet2 헤더 로우 생성
+        Row headerRow2 = sheet2.createRow(0);
+        headerRow2.createCell(0).setCellValue("Category");
+        headerRow2.createCell(1).setCellValue("Count");
+
+        // Sheet2 데이터 로우 생성
+        int rowNum2 = 1;
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+            Row row = sheet2.createRow(rowNum2++);
+            row.createCell(0).setCellValue(entry.getKey());
+            row.createCell(1).setCellValue(entry.getValue());
+        }
+
+        // ------------------------- Sheet3: 날짜 및 숫자 데이터 -------------------------
+        Sheet sheet3 = workbook.createSheet("Daily Data"); // "Daily Data"라는 이름의 세 번째 시트 생성
+
+        // 날짜 데이터 스타일 생성 (날짜 형식 지정)
+        CellStyle dateCellStyle = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
+        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd"));
+
+        // Sheet3 헤더 로우 생성
+        Row headerRow3 = sheet3.createRow(0);
+        headerRow3.createCell(0).setCellValue("날짜");
+        headerRow3.createCell(1).setCellValue("값1");
+        headerRow3.createCell(2).setCellValue("값2");
+
+        // Sheet3 데이터 로우 생성 (지난 7일간의 데이터 예시)
+        int rowNum3 = 1;
+        for (int i = 0; i < 7; i++) {
+            Row row = sheet3.createRow(rowNum3++);
+            LocalDate date = LocalDate.now().minusDays(i); // 오늘부터 i일 전의 날짜
+            double value1 = 100 + (i * 5) + Math.random() * 10; // 임의의 숫자 값
+            double value2 = 50 - (i * 2) + Math.random() * 5;  // 임의의 숫자 값
+
+            // 날짜 셀
+            Cell dateCell = row.createCell(0);
+            dateCell.setCellValue(date); // LocalDate 객체를 직접 셀에 설정
+            dateCell.setCellStyle(dateCellStyle); // 날짜 스타일 적용
+
+            // 숫자 셀
+            row.createCell(1).setCellValue(value1);
+            row.createCell(2).setCellValue(value2);
+        }
+
+
+        // 출력 스트림화
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+
+        return outputStream.toByteArray();
     }
 
 }
