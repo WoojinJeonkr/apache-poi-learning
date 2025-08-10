@@ -1,6 +1,6 @@
 package com.example.apachepoilearning.api;
 
-import com.example.apachepoilearning.domain.service.DownloadService;
+import com.example.apachepoilearning.domain.download.service.DownloadService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

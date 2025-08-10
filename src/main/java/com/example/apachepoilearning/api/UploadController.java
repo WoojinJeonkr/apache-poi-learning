@@ -1,6 +1,6 @@
 package com.example.apachepoilearning.api;
 
-import com.example.apachepoilearning.domain.download.service.UploadService;
+import com.example.apachepoilearning.domain.upload.service.UploadService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,9 +39,9 @@ public class UploadController {
      * @throws IOException 파일 처리 중 발생할 수 있는 입출력 예외
      */
     @PostMapping("/upload")
-    public String uploadProcess(@RequestParam("file") MultipartFile file) throws IOException {
-        uploadService.uploadXlsx(file);
-
+    public String uploadProcess(@RequestParam("file") MultipartFile file) throws Exception {
+        // uploadService.uploadXlsx(file);
+        uploadService.uploadSAXXlsx(file);
         return "redirect:/upload";
     }
 }
