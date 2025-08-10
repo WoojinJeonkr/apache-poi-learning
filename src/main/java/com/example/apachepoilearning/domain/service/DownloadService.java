@@ -20,6 +20,9 @@ public class DownloadService {
     public byte[] downloadXlsx() throws IOException {
 
         // 엑셀 Workbook 객체 생성
+        // XSSFWorkbook은 엑셀 파일을 읽을 때 모든 데이터를 메모리에 로드
+        // 데이터가 많을수록 더 많은 메모리를 사용하게 되고,
+        // 시스템에서 할당된 메모리보다 더 많은 메모리를 요구하면 OOM(OutOfMemoryError) 에러가 발생
         Workbook workbook = new XSSFWorkbook();
 
         // 시트 추가
