@@ -29,6 +29,7 @@ dependencies {
 
     // Apache POI 의존성 추가
     implementation 'org.apache.poi:poi-ooxml:5.4.0'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
