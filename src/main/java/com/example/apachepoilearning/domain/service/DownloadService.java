@@ -2,6 +2,7 @@ package com.example.apachepoilearning.domain.service;
 
 import com.example.apachepoilearning.entity.User;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
@@ -104,6 +105,61 @@ public class DownloadService {
             row.createCell(2).setCellValue(value2);
         }
 
+        // ------------------------- Sheet3: 셀 기능 조작 연습 -------------------------
+        Sheet sheet4 = workbook.createSheet("Cell Practice");
+
+        // 셀 병합: B1 (0행, 1열)부터 C1 (0행, 2열)까지 병합
+        sheet4.addMergedRegion(new CellRangeAddress(0, 0, 1, 2));
+
+        // 1. 셀 디자인
+        // 스타일 객체 생성
+        CellStyle style1 = workbook.createCellStyle();
+
+        // 배경색
+        style1.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
+        style1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        // 테두리 스타일
+        style1.setBorderTop(BorderStyle.THICK);
+        style1.setBorderBottom(BorderStyle.THICK);
+        style1.setBorderLeft(BorderStyle.THICK);
+        style1.setBorderRight(BorderStyle.THICK);
+
+        // 테두리 색상
+        style1.setTopBorderColor(IndexedColors.RED.getIndex());
+        style1.setBottomBorderColor(IndexedColors.BLUE.getIndex());
+        style1.setLeftBorderColor(IndexedColors.GREEN.getIndex());
+        style1.setRightBorderColor(IndexedColors.PINK.getIndex());
+
+        // 특정 셀에 저장 (여러 셀이라면 반복문을 통해 반복 수행)
+        Row sheet4_row1 = sheet4.createRow(1);
+        Cell sheet4_row1_cell0 = sheet4_row1.createCell(0);
+        sheet4_row1_cell0.setCellValue("데이터");
+        sheet4_row1_cell0.setCellStyle(style1);
+
+        // 2. 글자 디자인
+        CellStyle style2 = workbook.createCellStyle();
+
+        // 폰트 설정
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short)14);     // 폰트 크기
+        font.setBold(true);                        // 굵게
+        font.setItalic(true);                      // 이탤릭
+        font.setColor(IndexedColors.BLUE.getIndex()); // 폰트 색상
+        style2.setFont(font);
+
+        // 글자 정렬
+        style2.setAlignment(HorizontalAlignment.CENTER); // 가로 가운데 정렬
+        style2.setVerticalAlignment(VerticalAlignment.CENTER); // 세로 가운데 정렬
+
+        // 특정 셀에 지정
+        Row sheet4_row2 = sheet4.createRow(2);
+        Cell sheet4_row2_cell0 = sheet4_row2.createCell(0);
+        sheet4_row2_cell0.setCellValue("데이터");
+        sheet4_row2_cell0.setCellStyle(style1);
+
+        // 3. 필터: 0번째 행의 0열부터 2열까지 필터 적용 (A1:C1)
+        sheet4.setAutoFilter(new CellRangeAddress(0, 0, 0, 2));
 
         // 출력 스트림화
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
